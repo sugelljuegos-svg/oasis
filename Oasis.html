@@ -1,0 +1,2937 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Velvet Oasis</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #000;
+            color: #fff;
+        }
+
+        .car-price {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #003d7a;
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
+
+        .top-bar {
+            position: absolute;
+            top: 0;            
+            left: 0;
+            width: 100%;
+            padding: 20px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 10;
+            box-sizing: border-box;
+        }
+
+        .logo {
+            font-size: 1.8em;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none; 
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+      
+        .site-logo {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 0;
+            border: 2px solid rgba(255,255,255,0.12);
+            background: #222;
+            display: inline-block;
+            vertical-align: middle;
+        }
+        @media (max-width: 480px) {
+            .site-logo { width: 40px; height: 40px; }
+        }
+
+        nav {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+        }
+
+      
+        nav a, .nav-toggle {
+            display: inline-flex;       
+            align-items: center;         
+            vertical-align: middle;      
+            background: transparent;
+            border: none;
+            color: white;
+            padding: 8px 10px;
+            font-size: 1em;
+            font-weight: 700; 
+            cursor: pointer;
+            position: relative;
+            transition: color 0.2s ease;
+            text-decoration: none;
+            font-family: inherit;
+            line-height: 1;
+            box-sizing: border-box;
+        }
+
+        nav a::after,
+        .nav-toggle::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: white;
+            transition: width 0.3s ease;
+        }
+
+        nav a:hover::after,
+        .nav-toggle:hover::after,
+        .nav-toggle:focus::after {
+            width: 100%;
+        }
+
+        
+        .nav-dropdown { position: relative; display: inline-block; }
+        .nav-dropdown .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: calc(100% + 6px);
+            right: 0;
+            background: #111;
+            border: 1px solid #333;
+            padding: 8px 0;
+            border-radius: 6px;
+            min-width: 160px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.6);
+            z-index: 30;
+        }
+        .nav-dropdown .dropdown-menu[aria-hidden="false"] { display: block; }
+        .nav-dropdown .dropdown-menu li { list-style: none; }
+        .nav-dropdown .dropdown-menu button {
+            width: 100%;
+            text-align: left;
+            padding: 8px 14px;
+            background: transparent;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+            font-size: 0.95em;
+            font-weight: 600;
+            font-family: inherit;
+            line-height: 1;
+        }
+        
+        .nav-dropdown .dropdown-menu button:hover,
+        .nav-dropdown .dropdown-menu button:focus {
+            color: #003d7a;
+            background: rgba(0,61,122,0.06);
+            outline: none;
+        }
+
+        .hero-section {
+            position: relative;
+            width: 100%;
+            min-height: 80vh; /* cambiar a min-height para permitir crecimiento */
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            color: white;
+            text-align: left;
+            overflow: hidden;
+        }
+
+        .hero-section video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            /* keep video visually behind content to avoid overlay issues in Edge */
+            z-index: -1 !important;
+            -webkit-transform: translate3d(0,0,0);
+            transform: translate3d(0,0,0);
+        }
+
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 1;
+        }
+
+        .hero-content {
+            position: relative;
+            padding-left: 5%;
+            max-width: 500px;
+            z-index: 2;
+            margin-top: 200px;
+        }
+
+        .hero-content h1 {
+            font-size: 4em;
+            margin: 0;
+            font-weight: 300;
+        }
+
+        .hero-content p {
+            font-size: 1.5em;
+            margin-top: 10px;
+            color: white;
+        }
+
+        .hero-button {
+            background-color: #003d7a;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+            margin-top: 20px;
+            text-transform: uppercase;
+            transition: background-color 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .hero-button:hover {
+            background-color: #002855;
+        }
+
+        .featured-soaps {
+            max-width: 1200px;
+            margin: 30px auto 40px;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(250px, 1fr));
+            gap: 18px;
+            align-items: stretch;
+        }
+
+        .featured-soap-card {
+            background: linear-gradient(135deg, rgba(255,255,255,0.09), rgba(0,61,122,0.15));
+            border: 1px solid rgba(0, 133, 204, 0.4);
+            border-radius: 12px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .featured-soap-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 22px rgba(0,0,0,0.28);
+        }
+
+        .featured-soap-card img {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .featured-soap-content {
+            padding: 16px;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            flex: 1;
+        }
+
+        .featured-soap-content h3 {
+            margin: 0;
+            color: #00e4ff;
+        }
+
+        .featured-soap-content p {
+            margin: 0;
+            color: #d6e6ff;
+            line-height: 1.4;
+            font-size: 0.96em;
+        }
+
+        .featured-soap-content .btn-highlight {
+            margin-top: auto;
+            display: inline-block;
+            background: #00b6e1;
+            border: none;
+            color: #fff;
+            border-radius: 7px;
+            padding: 10px 14px;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .featured-soap-content .btn-highlight:hover {
+            background: #0085b8;
+        }
+
+        @media(max-width: 860px) {
+            .featured-soaps { grid-template-columns: 1fr; }
+        }
+
+        .full-width-section {
+            width: 100%;
+            padding: 40px 0;
+            margin-bottom: 40px;
+            background: transparent;
+            box-shadow: none;
+        }
+
+        .inner-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        main {
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 15px;
+            background: transparent;
+            box-shadow: none;
+            min-height: 400px;
+            position: relative;
+        }
+
+        h2 {
+            color: #003d7a;
+            text-align: center;
+            border-bottom: 3px solid #003d7a;
+            padding-bottom: 6px;
+            margin-top: 0;
+        }
+
+        .featured-title {
+            color: #fff;
+            font-weight: 800;
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        p, h3, label, li {
+            color: #fff;
+        }
+
+        .content-section {
+            display: none;
+            animation: fadeIn 0.7s ease forwards;
+            background: transparent;
+            border-radius: 10px;
+            box-shadow: none;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        body:not(:target) #home { display: block; }
+        body:not(:target) #featured-soaps { display: block; }
+        body:not(:target) #featured-gloss { display: block; }
+        .content-section:target { display: block; }
+        .content-section:target ~ .content-section:not(:target),
+        main section:target ~ #about { display: none; }
+        #cars:target ~ #about, #services:target ~ #about, #contact:target ~ #about { display: none; }
+        #about:target { display: block; }
+
+        .cars-container {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 20px;
+        }
+
+        .cars-container.featured {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            justify-content: center;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        
+        @media (max-width: 1100px) {
+            .cars-container { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+            .cars-container.featured { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+        }
+        @media (max-width: 768px) {
+            .cars-container { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .cars-container.featured { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+        }
+        @media (max-width: 480px) {
+            .cars-container { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+        }
+
+        .car-card {
+            border: 1px solid #333;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 1px 1px 10px rgba(255,255,255,0.1);
+            transition: transform 0.3s ease;
+            cursor: pointer;
+            background: #111;
+            color: white;
+        }
+
+        .car-card:hover {
+            transform: scale(1.05);
+            box-shadow: 3px 3px 15px rgba(255,255,255,0.2);
+        }
+
+        .car-card img {
+            width: 100%;
+            height: 350px; 
+            object-fit: cover;
+            display: block;
+        }
+
+        
+
+        .car-card .info {
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .car-card .info h3 {
+            margin: 0;
+            font-size: 1em;
+            color: #fff;
+        }
+        
+        .car-card .info p:not(.car-price) {
+            display: none;
+        }
+
+        .add-to-cart-btn {
+            background: #003d7a;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-size: 0.9em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            font-family: inherit;
+            width: 100%;
+            margin-top: 5px;
+        }
+
+        .add-to-cart-btn:hover {
+            background: #002855;
+        }
+
+        .cart-item {
+            background: #111;
+            border: 1px solid #333;
+            padding: 12px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .cart-item-info {
+            flex: 1;
+        }
+
+        .cart-item-name {
+            color: #fff;
+            font-weight: 600;
+            margin: 0 0 5px 0;
+        }
+
+        .cart-item-price {
+            color: #003d7a;
+            font-weight: bold;
+        }
+
+        .cart-item-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .cart-qty-btn {
+            background: #333;
+            color: #fff;
+            border: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .cart-qty-btn:hover {
+            background: #555;
+        }
+
+        .cart-qty {
+            color: #fff;
+            min-width: 25px;
+            text-align: center;
+        }
+
+        .cart-remove-btn {
+            background: transparent;
+            color: #003d7a;
+            border: 1px solid #003d7a;
+            padding: 4px 8px;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        .cart-remove-btn:hover {
+            background: #003d7a;
+            color: #fff;
+        }
+
+        .services-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .services-list li {
+            background: #111;
+            border-left: 6px solid #003d7a;
+            margin-bottom: 12px;
+            padding: 12px 15px;
+            font-size: 1.1em;
+            color: #fff;
+            border-radius: 4px;
+        }
+
+        .presentation-layout {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            min-height: 500px;
+            align-items: stretch;
+        }
+
+        .presentation-box {
+            flex: 1;
+            padding: 20px;
+            border: 1px solid #333;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(255,255,255,0.1);
+            background-color: #111;
+            overflow-y: auto;
+            max-height: 500px;
+        }
+
+        .image-gallery-grid {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 10px;
+            height: 100%;
+        }
+
+        .gallery-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 5px;
+            transition: transform 0.3s ease;
+        }
+
+        .gallery-image:hover {
+            transform: scale(1.05);
+            z-index: 5;
+        }
+
+        @media (max-width: 768px) {
+            .presentation-layout { flex-direction: column; min-height: auto; }
+            .presentation-box { max-height: 400px; }
+            .image-gallery-grid { grid-template-columns: 1fr; grid-template-rows: auto; height: auto; }
+            .inner-content { padding: 0 15px; }
+            .nav-dropdown .dropdown-menu { right: auto; left: 0; }
+            
+            .car-card img { height: 160px; }
+        }
+
+        @media (max-width: 480px) {
+            .car-card img { height: 120px; }
+        }
+
+        form {
+            max-width: 400px;
+            margin-top: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 8px 10px;
+            margin-bottom: 15px;
+            border: 1.5px solid #444;
+            border-radius: 5px;
+            font-size: 1em;
+            font-family: inherit;
+            background: #000;
+            color: #fff;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus, textarea:focus {
+            border-color: #003d7a;
+            outline: none;
+        }
+
+        button.submit-btn {
+            background-color: #003d7a;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            font-size: 1em;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button.submit-btn:hover {
+            background-color: #002855;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .accordion-check { display: none; }
+
+        .accordion-label {
+            display: block;
+            background-color: #003d7a;
+            color: white;
+            cursor: pointer;
+            padding: 15px 20px;
+            width: 100%;
+            text-align: left;
+            border: none;
+            outline: none;
+            transition: background-color 0.3s ease;
+            font-size: 1.1em;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .accordion-label:hover { background-color: #002855; }
+
+        .panel {
+            padding: 0 15px;
+            background-color: transparent;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out, padding 0.3s ease-out;
+            border-left: 3px solid #003d7a;
+            border-radius: 0 0 8px 8px;
+            color: #fff;
+            font-size: 1em;
+        }
+
+        .accordion-check:checked + .accordion-label + .panel {
+            max-height: 500px;
+            padding: 15px;
+            transition: max-height 0.5s ease-in, padding 0.5s ease-in;
+        }
+
+        .accordion-check:checked + .accordion-label { background-color: #003d7a; }
+
+        .container {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            gap: 20px;
+        }
+
+        .box {
+            flex: 1;
+            padding: 15px;
+            border: 1px solid #333;
+            border-radius: 5px;
+            text-align: center;
+            background: #111;
+            color: white;
+        }
+
+        .box img {
+            width: 150px;
+            height: auto;
+            margin-bottom: 15px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #000;
+            color: #fff;
+            border-top: 1px solid #333;
+        }
+
+        
+        .view-btn {
+            display: block; 
+            margin: 10px auto 0; 
+            padding: 8px 12px;
+            border-radius: 6px;
+            border: 1px solid #003d7a;
+            background: #003d7a; 
+            color: #ffffff; 
+            font-weight: 700;
+            cursor: pointer;
+            text-align: center;
+        }
+        .view-btn:hover,
+        .view-btn:focus {
+            background: #002855; 
+            color: #ffffff;
+            outline: none;
+        }
+
+        
+        .modal {
+            display: none; 
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.75);
+            align-items: center;
+            justify-content: center;
+            z-index: 99999 !important;
+            padding: 20px;
+            pointer-events: auto !important;
+        }
+
+        .modal[aria-hidden="false"] { 
+            display: flex !important; 
+            pointer-events: auto !important;
+        }
+
+        .modal-content {
+            position: relative;
+            background: #0f0f0f;
+            border: 1px solid #222;
+            color: #fff;
+            border-radius: 10px;
+            max-width: 900px;
+            width: 100%;
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .modal-image {
+            width: 40%;
+            max-height: 420px;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+
+        .modal-info { flex: 1; }
+        .modal-title { margin: 0 0 8px 0; font-size: 1.4em; }
+        .modal-price { color: #003d7a; font-weight: 800; margin-bottom: 8px; }
+
+        .modal-close {
+            position: absolute;
+            right: 12px;
+            top: 8px;
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 1.6em;
+            cursor: pointer;
+        }
+
+        
+        .social-footer {
+            width: 100%;
+            align-items: center;
+            padding: 20px 5%;
+            gap: 12px;
+            box-sizing: border-box;
+            flex-wrap: wrap;
+            display: none; 
+        }
+
+        
+        /* moved social footer to the Sobre Nosotros section */
+        #sobre-nosotros .social-footer {
+            display: flex;
+        }
+
+        /* ensure social buttons in the main footer are visible and aligned */
+        footer .social-footer {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 12px;
+            padding: 6px 0;
+        }
+
+        .social-label {
+            color: #fff;
+            font-weight: 700;
+            margin-right: 6px;
+            font-size: 0.95rem;
+            flex: 0 0 auto; 
+            text-align: left;
+        }
+
+        .social-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            color: #fff;
+            padding: 10px 14px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 700;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.18);
+            transition: transform .12s ease, filter .12s ease;
+            border: none;
+            font-family: inherit;
+        }
+
+        .instagram-btn {
+            background: linear-gradient(45deg, #f58529 0%, #dd2a7b 50%, #8134af 100%);
+            margin: 0 auto; 
+        }
+        .facebook-btn {
+            background: #1877F2;
+            flex: 0 0 auto; 
+        }
+
+        .social-btn svg { width: 18px; height: 18px; display: block; }
+        .social-btn:hover { transform: translateY(-2px); filter: brightness(.95); }
+
+        @media (max-width: 600px) {
+            .social-footer { padding: 16px; }
+            .instagram-btn { margin: 8px auto; } 
+            .social-label, .facebook-btn { flex: 1 1 100%; text-align: center; } 
+        }
+
+        .home-content {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            background: #000;
+        }
+
+        .home-intro {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 20px;
+            background: #000;
+            color: #fff;
+        }
+
+        .image-showcase {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .showcase-left {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .small-images {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            grid-template-rows: repeat(2, auto);
+            gap: 12px;
+            width: 100%;
+        }
+
+        .small-images img {
+            display: block;
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-radius: 10px;
+            border: 2px solid rgba(0, 61, 122, 0.2);
+        }
+
+        .home-content-reverse {
+            flex-direction: row-reverse;
+        }
+
+        .home-text {
+            flex: 1;
+            animation: fadeIn 2s ease forwards;
+        }
+
+        .home-text h2 {
+            font-size: 2.5em;
+            color: #003d7a;
+            margin-top: 0;
+            margin-bottom: 20px;
+            border: none;
+            padding: 0;
+        }
+
+        .home-text p {
+            font-size: 1.3em;
+            line-height: 1.6;
+            color: #fff;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        .home-image {
+            flex: 1;
+        }
+
+        .home-image img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        @media (max-width: 768px) {
+            .home-content {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .home-text h2 {
+                font-size: 2em;
+            }
+
+            .home-text p {
+                font-size: 1em;
+            }
+        }
+
+        /* Koenigsegg-like section styles */
+        .koenig-section { background: #000; padding: 60px 20px 60px 20px; }
+        .koenig-inner { max-width: 1200px; margin: 0 auto; display: flex; gap: 40px; align-items: center; }
+        .koenig-text { flex: 1; color: #fff; }
+        .koenig-subtitle { color: #003d7a; text-transform: uppercase; font-weight: 800; letter-spacing: 1px; margin-bottom: 10px; }
+        .koenig-title { font-size: 3.6em; margin: 0 0 20px; line-height: 1; color: #fff; font-weight: 800; padding-bottom: 25px; border-bottom: 2px solid #003d7a; }
+        .koenig-desc { font-size: 1.15em; color: #ddd; line-height: 1.6; margin-bottom: 20px; }
+        .koenig-text p { font-size: 1.15em; color: #ddd; line-height: 1.6; margin-bottom: 20px; font-weight: 400; }
+        .koenig-cta { background: transparent; border: 2px solid #003d7a; color: #003d7a; padding: 12px 20px; border-radius: 6px; text-decoration: none; display: inline-block; font-weight: 800; }
+        .koenig-cta:hover { background: #003d7a; color: #fff; }
+        .koenig-image { flex: 1; }
+        .koenig-image img { width: 100%; height: auto; border-radius: 10px; object-fit: cover; box-shadow: 0 8px 30px rgba(0,0,0,0.6); }
+
+        @media (max-width: 768px) {
+            .koenig-inner { flex-direction: column-reverse; text-align: center; }
+            .koenig-title { font-size: 2em; }
+            .koenig-desc { font-size: 1em; }
+            .koenig-cta { margin: 0 auto; }
+        }
+
+        /* Gallery Grid for 4 boxes below home section */
+        .gallery-grid { max-width: 1200px; margin: 80px auto 60px auto; padding: 0 20px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+        .gallery-box { height: 450px; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,61,122,0.2); transition: transform 0.3s ease; cursor: pointer; }
+        .gallery-box img { width: 100%; height: 100%; object-fit: cover; }
+        .gallery-box:hover { transform: scale(1.05); }
+        .gallery-box { position: relative; }
+        .gallery-text { position: absolute; left: 15px; bottom: 15px; color: #000; font-weight: 900; font-size: 1.6em; font-style: normal; text-shadow: none; -webkit-text-stroke: 0.35px rgba(255,255,255,0.55); z-index: 10; background: transparent; padding: 0; border-radius: 0; font-family: inherit; }
+
+        @media (max-width: 1100px) { .gallery-grid { grid-template-columns: repeat(3, 1fr); } }
+        @media (max-width: 768px) { .gallery-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 480px) { .gallery-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 480px) { .gallery-text { font-size: 1.05em; } }
+
+        /* Featured Cars Section */
+        .featured-cars { max-width: 1200px; margin: 0px auto; padding: 0 20px; }
+        .featured-cars h1 { color: #fff; text-align: center; border: none; padding-bottom: 0; margin-bottom: 60px; font-weight: 900; font-size: 2.5em; margin-top: 0; }
+        .featured-layout { display: flex; gap: 30px; align-items: stretch; flex-direction: row-reverse; }
+        .featured-main { flex: 1; position: relative; overflow: hidden; border-radius: 10px; box-shadow: 0 8px 25px rgba(0,61,122,0.3); transition: transform 0.3s ease; cursor: pointer; }
+        .featured-main:hover { transform: scale(1.02); }
+        .featured-main img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .featured-main-info { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.9) 100%); padding: 30px 20px; color: #fff; }
+        .featured-main-title { font-size: 1.8em; font-weight: 800; margin: 0 0 5px 0; }
+        .featured-main-price { font-size: 1.3em; color: #003d7a; font-weight: 800; }
+        .featured-grid { flex: 1; display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 15px; }
+        .featured-item { position: relative; overflow: hidden; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,61,122,0.2); transition: transform 0.3s ease; cursor: pointer; }
+        .featured-item:hover { transform: scale(1.05); }
+        .featured-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .featured-item-info { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.85) 100%); padding: 15px 12px; color: #fff; }
+        .featured-item-name { font-size: 1em; font-weight: 700; margin: 0; }
+        .featured-item-price { font-size: 0.85em; color: #003d7a; font-weight: 700; margin: 3px 0 0 0; }
+
+        @media (max-width: 1000px) {
+            .featured-layout { flex-direction: column; }
+            .featured-main { min-height: 350px; }
+            .featured-grid { grid-template-columns: repeat(4, 1fr); grid-template-rows: auto; }
+        }
+        @media (max-width: 768px) {
+            .featured-layout { gap: 15px; }
+            .featured-main { min-height: 300px; }
+            .featured-main-title { font-size: 1.5em; }
+            .featured-main-price { font-size: 1.1em; }
+            .featured-grid { grid-template-columns: repeat(4, 1fr); gap: 10px; }
+            .featured-item-name { font-size: 0.9em; }
+            .featured-item-price { font-size: 0.75em; }
+        }
+        @media (max-width: 480px) {
+            .featured-cars { margin: 60px auto; }
+            .featured-main { min-height: 250px; }
+            .featured-main-title { font-size: 1.2em; }
+            .featured-main-price { font-size: 0.95em; }
+            .featured-main-info { padding: 20px 15px; }
+            .featured-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+            .featured-item-info { padding: 10px 8px; }
+            .featured-item-name { font-size: 0.8em; }
+            .featured-item-price { font-size: 0.7em; }
+        }
+
+        /* CTA Section after gallery */
+        .cta-section { max-width: 1200px; margin: 60px auto; padding: 0 20px; }
+        .cta-container { display: flex; gap: 40px; align-items: center; background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%); border-radius: 15px; overflow: hidden; box-shadow: 0 8px 30px rgba(0,61,122,0.2); }
+        .cta-image { flex: 1; height: 400px; overflow: hidden; }
+        .cta-image img { width: 100%; height: 100%; object-fit: cover; }
+        .cta-content { flex: 1; padding: 50px 40px; color: #fff; display: flex; flex-direction: column; align-items: center; text-align: center; }
+        .cta-content h2 { font-size: 2.2em; color: #003d7a; margin: 0 0 15px 0; font-weight: 900; }
+        .cta-content p { font-size: 1.1em; line-height: 1.6; margin: 0 0 25px 0; color: #ddd; }
+        .cta-btn { background: #003d7a; color: #fff; padding: 14px 35px; border: none; border-radius: 8px; font-size: 1em; font-weight: 700; cursor: pointer; text-decoration: none; display: inline-block; transition: all 0.3s ease; }
+        .cta-btn:hover { background: #002855; transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0,61,122,0.4); }
+
+        @media (max-width: 1000px) {
+            .cta-container { flex-direction: column; }
+            .cta-image { height: 300px; }
+            .cta-content { padding: 40px 30px; }
+            .cta-content h2 { font-size: 1.8em; }
+        }
+        @media (max-width: 768px) {
+            .cta-section { margin: 40px auto; }
+            .cta-image { height: 250px; }
+            .cta-content { padding: 30px 20px; }
+            .cta-content h2 { font-size: 1.5em; }
+            .cta-content p { font-size: 1em; }
+        }
+        @media (max-width: 480px) {
+            .cta-container { border-radius: 10px; }
+            .cta-image { height: 200px; }
+            .cta-content { padding: 20px 15px; }
+            .cta-content h2 { font-size: 1.2em; }
+            .cta-btn { padding: 12px 25px; font-size: 0.9em; }
+        }
+
+        /* Login Button and Modal Styles */
+        .login-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: #003d7a;
+            color: #fff;
+            padding: 10px 16px;
+            border: none;
+            border-radius: 6px;
+            font-size: 0.95em;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            transition: background 0.3s ease;
+            font-family: inherit;
+        }
+
+        .login-btn:hover {
+            background: #002855;
+        }
+
+        .login-btn svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* User Profile Styles */
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(0, 61, 122, 0.1);
+            padding: 8px 14px;
+            border-radius: 6px;
+            border: 1px solid #003d7a;
+        }
+
+        .user-email {
+            color: #fff;
+            font-size: 0.95em;
+            font-weight: 600;
+            word-break: break-all;
+            max-width: 120px;
+        }
+
+        .logout-btn {
+            background: #003d7a;
+            color: #fff;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            font-family: inherit;
+            white-space: nowrap;
+        }
+
+        .logout-btn:hover {
+            background: #002855;
+        }
+
+        .login-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+            z-index: 2147483647 !important;
+            padding: 20px;
+        }
+
+        /* When modal is open, prevent interactions with the hero/video underneath */
+        .modal-open .hero-section,
+        .modal-open .top-bar {
+            pointer-events: none;
+        }
+
+        .login-modal[aria-hidden="false"] {
+            display: flex;
+        }
+
+        .login-modal-content {
+            position: relative;
+            background: #1a1a1a;
+            border: 2px solid #003d7a;
+            border-radius: 12px;
+            padding: 0;
+            max-width: 400px;
+            width: 100%;
+            color: #fff;
+            box-shadow: 0 10px 40px rgba(0, 61, 122, 0.3);
+            pointer-events: auto;
+            overflow: hidden;
+            z-index: 2147483648;
+        }
+
+        /* Tabs Navigation */
+        .login-tabs {
+            display: flex;
+            background: #0f0f0f;
+            border-bottom: 2px solid #003d7a;
+        }
+
+        .login-tab-btn {
+            flex: 1;
+            padding: 16px;
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 0.95em;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+            margin: -2px 0 0 0;
+        }
+
+        .login-tab-btn:hover {
+            background: rgba(0, 61, 122, 0.1);
+            color: #003d7a;
+        }
+
+        .login-tab-btn.active {
+            color: #003d7a;
+            border-bottom-color: #003d7a;
+            background: rgba(0, 61, 122, 0.05);
+        }
+
+        /* Tab Content */
+        .login-tab-content {
+            display: none;
+            padding: 40px;
+            animation: fadeIn 0.3s ease forwards;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        .login-tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .login-modal-close {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: transparent;
+            border: none;
+            color: #fff;
+            font-size: 1.8em;
+            cursor: pointer;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-modal-close:hover {
+            color: #003d7a;
+        }
+
+        .login-modal h2 {
+            margin: 0 0 30px 0;
+            font-size: 2em;
+            text-align: center;
+            color: #fff;
+            border: none;
+            padding: 0;
+        }
+
+        .login-modal .form-group {
+            margin-bottom: 20px;
+        }
+
+        .login-modal label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        .login-modal input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #444;
+            border-radius: 6px;
+            background: #1a1a1a;
+            color: #fff;
+            font-size: 1em;
+            font-family: inherit;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease;
+            pointer-events: auto;
+        }
+
+        .login-modal input:focus {
+            outline: none;
+            border-color: #003d7a;
+            box-shadow: 0 0 8px rgba(0, 61, 122, 0.3);
+        }
+
+        .login-modal button[type="submit"] {
+            width: 100%;
+            padding: 12px;
+            background: #003d7a;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-size: 1em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            font-family: inherit;
+        }
+
+        .login-modal button[type="submit"]:hover {
+            background: #002855;
+        }
+
+        .login-message {
+            display: none;
+            margin-top: 20px;
+            padding: 12px;
+            border-radius: 6px;
+            text-align: center;
+            font-weight: 600;
+        }
+
+        .login-message.success {
+            background: rgba(76, 175, 80, 0.2);
+            color: #4caf50;
+            display: block;
+        }
+
+        .login-message.error {
+            background: rgba(0, 61, 122, 0.2);
+            color: #0055b3;
+            display: block;
+        }
+
+        /* Role selector styles */
+        .role-selector {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(0, 61, 122, 0.05);
+            border: 1px solid #003d7a;
+            border-radius: 6px;
+        }
+
+        .role-selector label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            font-weight: 500;
+            color: #fff;
+        }
+
+        .role-selector label:last-child {
+            margin-bottom: 0;
+        }
+
+        .role-selector input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            accent-color: #003d7a;
+        }
+
+        /* Admin Panel Styles */
+        .admin-panel {
+            position: fixed;
+            right: 20px;
+            top: 80px;
+            background: #1a1a1a;
+            border: 2px solid #003d7a;
+            border-radius: 8px;
+            z-index: 2147483650 !important;
+            pointer-events: auto;
+            /* Ensure a new stacking context and GPU compositing for consistent top-layer rendering in Edge */
+            -webkit-transform: translate3d(0,0,0);
+            transform: translate3d(0,0,0);
+            will-change: transform;
+            display: none;
+            min-width: 200px;
+            box-shadow: 0 4px 20px rgba(0, 61, 122, 0.2);
+            overflow: hidden;
+            max-height: 0;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+        }
+
+        .admin-panel.show {
+            display: block;
+            padding: 15px;
+            max-height: 80vh;
+            overflow-y: auto;
+            width: 280px;
+            z-index: 2147483650 !important;
+            pointer-events: auto;
+        }
+
+        .admin-panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            padding: 12px 0;
+            margin: 0;
+            color: #003d7a;
+            font-size: 1.1em;
+            border-bottom: 1px solid #003d7a;
+            user-select: none;
+        }
+
+        .admin-panel-header:hover {
+            color: #0055b3;
+        }
+
+        .admin-panel-toggle {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+            transition: transform 0.3s ease;
+            color: #003d7a;
+            font-size: 1.2em;
+        }
+
+        .admin-panel.expanded .admin-panel-toggle {
+            transform: rotate(180deg);
+        }
+
+        .admin-panel-content {
+            display: none;
+            padding-top: 15px;
+        }
+
+        .admin-panel.expanded .admin-panel-content {
+            display: block;
+        }
+
+        .admin-panel button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 8px;
+            background: #003d7a;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.9em;
+            transition: background 0.3s ease;
+            font-family: inherit;
+        }
+
+        .admin-panel button:hover {
+            background: #002855;
+        }
+
+        .admin-panel button:last-child {
+            margin-bottom: 0;
+        }
+
+        /* Editable text styles */
+        .hero-content h1.editable,
+        .hero-content p.editable {
+            cursor: pointer;
+            position: relative;
+            padding: 5px 10px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+
+        .hero-content h1.editable:hover,
+        .hero-content p.editable:hover {
+            background: rgba(0, 61, 122, 0.15);
+            outline: 2px dashed #003d7a;
+        }
+
+        .hero-content h1.editing,
+        .hero-content p.editing {
+            background: rgba(0, 61, 122, 0.2);
+            outline: 2px solid #003d7a;
+        }
+
+        .editable-input {
+            background: #1a1a1a;
+            color: #fff;
+            border: 2px solid #003d7a;
+            border-radius: 4px;
+            padding: 10px;
+            font-size: 1em;
+            font-family: inherit;
+            font-weight: inherit;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .editable-input:focus {
+            outline: none;
+            box-shadow: 0 0 10px rgba(0, 61, 122, 0.4);
+        }
+
+        /* Vertical Sections with Images and Text */
+        .vertical-sections-container {
+            max-width: 1200px;
+            margin: 80px auto 60px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        .vertical-card {
+            display: flex;
+            flex-direction: column;
+            background: #111;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,61,122,0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .vertical-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 8px 25px rgba(0,61,122,0.35);
+        }
+
+        .vertical-image {
+            width: 100%;
+            height: 400px;
+            overflow: hidden;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .vertical-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .vertical-card:hover .vertical-image img {
+            transform: scale(1.05);
+        }
+
+        .vertical-text {
+            padding: 25px 20px;
+            color: #fff;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .vertical-text h3 {
+            color: #003d7a;
+            font-size: 1.3em;
+            margin: 0 0 12px 0;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .vertical-text p {
+            color: #ddd;
+            font-size: 0.95em;
+            line-height: 1.6;
+            margin: 0;
+            flex: 1;
+        }
+
+        @media (max-width: 1100px) {
+            .vertical-sections-container { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 768px) {
+            .vertical-sections-container { grid-template-columns: 1fr; margin: 60px auto 40px auto; }
+            .vertical-image { height: 350px; }
+            .vertical-text { padding: 20px 15px; }
+            .vertical-text h3 { font-size: 1.1em; }
+            .vertical-text p { font-size: 0.9em; }
+        }
+
+        @media (max-width: 480px) {
+            .vertical-image { height: 280px; }
+            .vertical-text h3 { font-size: 1em; margin-bottom: 8px; }
+            .vertical-text { padding: 15px 12px; }
+        }
+
+        @media (max-width: 768px) {
+            .login-modal-content {
+                padding: 30px 20px;
+                max-width: 90%;
+
+                    /* Dashboard Styles */
+                    .dashboard-section {
+                        display: none;
+                        position: fixed;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        background: #000;
+                        z-index: 5;
+                        overflow-y: auto;
+                    }
+
+                    .dashboard-section.active {
+                        display: flex;
+                        flex-direction: column;
+                    }
+
+                    .dashboard-hero {
+                        position: relative;
+                        width: 100%;
+                        height: 70vh;
+                        background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        overflow: hidden;
+                    }
+
+                    .dashboard-hero img {
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                    }
+
+                    .dashboard-hero::before {
+                        content: '';
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        right: 0;
+                        bottom: 0;
+                        background: rgba(0, 0, 0, 0.4);
+                        z-index: 2;
+                    }
+
+                    .dashboard-header {
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        padding: 20px 5%;
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        z-index: 3;
+                        box-sizing: border-box;
+                    }
+
+                    .dashboard-logo {
+                        font-size: 1.8em;
+                        color: white;
+                        font-weight: bold;
+                        text-decoration: none;
+                        display: inline-flex;
+                        align-items: center;
+                        gap: 10px;
+                        cursor: pointer;
+                    }
+
+                    .dashboard-logo img {
+                        width: 48px;
+                        height: 48px;
+                        border-radius: 50%;
+                        object-fit: cover;
+                        border: 2px solid rgba(255, 255, 255, 0.12);
+                    }
+
+                    .dashboard-nav {
+                        display: flex;
+                        gap: 15px;
+                        align-items: center;
+                    }
+
+                    .dashboard-nav a {
+                        color: white;
+                        text-decoration: none;
+                        font-weight: 700;
+                        padding: 8px 12px;
+                        transition: color 0.3s ease;
+                    }
+
+                    .dashboard-nav a:hover {
+                        color: #002855;
+                    }
+
+                    .dashboard-content {
+                        flex: 1;
+                        padding: 60px 5%;
+                        max-width: 1200px;
+                        margin: 0 auto;
+                        width: 100%;
+                    }
+
+                    .dashboard-welcome {
+                        font-size: 2.5em;
+                        color: #fff;
+                        margin: 0 0 20px 0;
+                        font-weight: 800;
+                    }
+
+                    .dashboard-welcome .user-name {
+                        color: #002855;
+                    }
+
+                    .dashboard-text {
+                        font-size: 1.1em;
+                        color: #ddd;
+                        line-height: 1.8;
+                        margin-bottom: 30px;
+                        max-width: 700px;
+                    }
+
+                    .dashboard-back-btn {
+                        display: inline-block;
+                        background: #002855;
+                        color: #fff;
+                        padding: 12px 24px;
+                        border: none;
+                        border-radius: 6px;
+                        font-size: 1em;
+                        font-weight: 700;
+                        cursor: pointer;
+                        text-decoration: none;
+                        transition: background 0.3s ease;
+                        font-family: inherit;
+                    }
+
+                    .dashboard-back-btn:hover {
+                        background: #002855;
+                    }
+            }
+
+            .login-modal h2 {
+                font-size: 1.6em;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+<section id="home" class="hero-section content-section">
+    <video autoplay muted loop playsinline preload="auto" poster="images/oppppp.webp">
+    </video>
+    <div class="top-bar">
+    <div class="top-bar">
+        <a href="#home" class="logo" aria-label="Inicio">
+            <img src="images/LogoVelvet-fotor-20260128232832.jpg" alt="CleanerStudio" class="site-logo" />
+            Velvet Oasis
+        </a>
+        <nav>
+            <a href="#home">Inicio</a>
+            <a href="#about">Quienes somos</a>
+            <a href="#cars">Productos</a>
+            <a href="#services">Servicios</a>
+            <a href="#contact">Contacto</a>
+            <button id="cartBtn" class="cart-btn" aria-label="Carrito" style="background:transparent;border:none;cursor:pointer;margin-left:20px;">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h2l3.6 7.59a2 2 0 0 0 1.7 1.18l11.72.41a2 2 0 0 0 2-2.18l-1.38-7.59H6.21"/></svg>
+            </button>
+        </nav>
+    </div>
+    <div class="hero-content">
+        <h1>Velvet Oasis</h1>
+        <p>Donde la naturaleza tropical se convierte en suavidad.</p>
+        
+        </div>
+    </div>
+</section>
+
+<section id="featured-soaps" class="content-section">
+    <h2 style="text-align: center; color: #00e4ff; margin-bottom: 18px;">Jabones Destacados</h2>
+    <div class="featured-soaps">
+        <article class="featured-soap-card">
+            <img src="images/Romero.jpeg" alt="Jabón de Romero Destacado">
+            <div class="featured-soap-content">
+                <h3>Jabón artesanal de Romero</h3>
+                <p>Con aceite esencial de romero, 100% natural, para piel mixta y renovación profunda.</p>
+                <p style="font-weight:800;">$200</p>
+                <button class="btn-highlight" onclick="addToCart(1, 'Jabón artesanal de romero', 200)">Agregar al carrito</button>
+            </div>
+        </article>
+
+        <article class="featured-soap-card">
+            <img src="images/Avena.jpeg" alt="Jabón de Avena Destacado">
+            <div class="featured-soap-content">
+                <h3>Jabon Artesanal de Avena</h3>
+                <p>Exfoliante suave con avena, ideal para piel seca y sensible, nutre y suaviza.</p>
+                <p style="font-weight:800;">$150</p>
+                <button class="btn-highlight" onclick="addToCart(2, 'Jabon Artesanal de Avena', 150)">Agregar al carrito</button>
+            </div>
+        </article>
+    </div>
+</section>
+
+<section id="featured-gloss" class="content-section">
+    <h2 style="text-align: center; color: #00e4ff; margin-bottom: 18px; border-bottom: none;">Gloss Destacados</h2>
+    <div class="featured-soaps">
+        <article class="featured-soap-card">
+            <img src="images/Gloss de colores.webp" alt="Gloss de colores Destacado">
+            <div class="featured-soap-content">
+                <h3>Gloss de colores</h3>
+                <p>Gloss labial con colores vibrantes, hidratante y duradero.</p>
+                <p style="font-weight:800;">$150</p>
+                <button class="btn-highlight" onclick="addToCart(5, 'Gloss de colores', 180)">Agregar al carrito</button>
+            </div>
+        </article>
+
+        <article class="featured-soap-card">
+            <img src="images/gloss de brillo.jpg" alt="Gloss labial de miel Destacado">
+            <div class="featured-soap-content">
+                <h3>Gloss de brillo</h3>
+                <p>Gloss natural con miel, para labios suaves y nutridos.</p>
+                <p style="font-weight:800;">$250</p>
+                <button class="btn-highlight" onclick="addToCart(11, 'Gloss labial de miel', 160)">Agregar al carrito</button>
+            </div>
+        </article>
+    </div>
+</section>
+
+<section id="cars" class="content-section">
+    <h2>Nuestros Productos</h2>
+
+    <div class="cars-container">
+
+        <div class="car-card" data-product-id="1" data-brand="Ferrari" data-name="Jabón artesanal de romero" data-price="200">
+            <img src="images/Romero.jpeg" alt="Jabón romero" />
+            <div class="info">
+                <h3>Jabón artesanal de Romero</h3>
+                <p class="car-price">$200</p>
+                <button class="add-to-cart-btn" onclick="addToCart(1, 'Jabón artesanal de romero', 200)">Agregar al carrito</button>
+            </div>
+        </div>
+
+        <div class="car-card" data-product-id="2" data-brand="Porsche" data-name="Jabon Artesanal de Avena" data-price="150">
+            <img src="images/Avena.jpeg" alt="Jabón avena" />
+            <div class="info">
+                <h3>Jabon Artesanal de Avena</h3>
+                <p class="car-price">$150</p>
+                <button class="add-to-cart-btn" onclick="addToCart(2, 'Jabon Artesanal de Avena', 150)">Agregar al carrito</button>
+            </div>
+        </div>
+
+        <div class="car-card" data-product-id="3" data-brand="Porsche" data-name="Jabon Artesanal de Curcuma" data-price="200">
+            <img src="images/Curcuma.jpeg" alt="Jabón cúrcuma" />
+            <div class="info">
+                <h3>Jabon Artesanal de Curcuma</h3>
+                <p class="car-price">$200</p>
+                <button class="add-to-cart-btn" onclick="addToCart(3, 'Jabon Artesanal de Curcuma', 200)">Agregar al carrito</button>
+            </div>
+        </div>
+
+        <div class="car-card" data-product-id="4" data-brand="Porsche" data-name="Jabon Artesanal de Manzanilla" data-price="150">
+            <img src="images/Manzanilla.jpeg" alt="Jabón manzanilla" />
+            <div class="info">
+                <h3>Jabon Artesanal de Manzanilla</h3>
+                <p class="car-price">$150</p>
+                <button class="add-to-cart-btn" onclick="addToCart(4, 'Jabon Artesanal de Manzanilla', 150)">Agregar al carrito</button>
+            </div>
+        </div>
+
+        <div class="car-card" data-product-id="5" data-brand="Ferrari" data-name="Gloss de colores" data-price="180">
+            <img src="images/Gloss de colores.webp" alt="Gloss de colores" />
+            <div class="info">
+                <h3>Gloss de colores</h3>
+                <p class="car-price">$150</p>
+                <button class="add-to-cart-btn" onclick="addToCart(5, 'Jabón artesanal de Lavanda', 180)">Agregar al carrito</button>
+            </div>
+        </div>
+
+        <div class="car-card" data-product-id="6" data-brand="Porsche" data-name="Jabón artesanal de Miel" data-price="160">
+            <img src="images/gloss de coco.webp" alt="Jabón artesanal de Miel" />
+            <div class="info">
+                <h3>Gloss de aceite de coco</h3>
+                <p class="car-price">$125</p>
+                <button class="add-to-cart-btn" onclick="addToCart(6, 'Jabón artesanal de Miel', 160)">Agregar al carrito</button>
+            </div>
+        </div>
+
+        <div class="car-card" data-product-id="7" data-brand="Ferrari" data-name="Jabón artesanal de Café" data-price="190">
+            <img src="images/gloss de brillo.jpg" alt="Jabón artesanal de Café" />
+            <div class="info">
+                <h3>Gloss de brillo</h3>
+                <p class="car-price">$250</p>
+                <button class="add-to-cart-btn" onclick="addToCart(7, 'Jabón artesanal de Café', 190)">Agregar al carrito</button>
+            </div>
+        </div>
+
+        <div class="car-card" data-product-id="8" data-brand="Porsche" data-name="Jabón artesanal de Aloe Vera" data-price="170">
+            <img src="images/jabon de carbon.webp" alt="Jabón artesanal de Aloe Vera" />
+            <div class="info">
+                <h3>Jabón artesanal de carbon</h3>
+                <p class="car-price">$200</p>
+                <button class="add-to-cart-btn" onclick="addToCart(8, 'Jabón artesanal de Aloe Vera', 170)">Agregar al carrito</button>
+            </div>
+        </div>
+
+        <div class="car-card" data-product-id="9" data-brand="Ferrari" data-name="Jabón artesanal de Coco" data-price="155">
+            <img src="images/limpiador de facial.jpg" alt="Jabón artesanal de Coco" />
+            <div class="info">
+                <h3>Limpiador facial</h3>
+                <p class="car-price">$290</p>
+                <button class="add-to-cart-btn" onclick="addToCart(9, 'Jabón artesanal de Coco', 155)">Agregar al carrito</button>
+            </div>
+        </div>
+
+        <div class="car-card" data-product-id="10" data-brand="Porsche" data-name="Jabón artesanal de Limón" data-price="165">
+            <img src="images/exfoliante de cafe.webp" alt="Jabón artesanal de Limón" />
+            <div class="info">
+                <h3>Exfoliante de cafe</h3>
+                <p class="car-price">$200</p>
+                <button class="add-to-cart-btn" onclick="addToCart(10, 'Jabón artesanal de Limón', 165)">Agregar al carrito</button>
+            </div>
+        </div>
+
+
+    </div>
+</section>
+
+<section id="services" class="content-section">
+    <h2>Servicios</h2>
+    <ul class="services-list">
+        <li>Personalización de Fórmulas.</li>
+        <li>Asesoría en Cuidado de la Piel.</li>
+        <li>Recuerdos para Eventos (Souvenirs).</li>
+        <li>Venta a Granel para Negocios Locales.</li>
+        <li>Talleres de Elaboración de Jabón.</li>
+    </ul>
+</section>
+
+<section id="contact" class="content-section">
+    <h2>Contacto</h2>
+    <p>¿Tienes preguntas o deseas más información? Contáctanos:</p>
+    <form>
+        <label for="name">Nombre:</label>
+        <input type="text" id="name" name="name" required />
+        <label for="email">Correo electrónico:</label>
+        <input type="email" id="email" name="email" required />
+        <label for="message">Mensaje:</label>
+        <textarea id="message" name="message" rows="4" required></textarea>
+        <button type="submit" class="submit-btn">Enviar</button>
+    </form>
+</section>
+<section id="about" class="full-width-section content-section">
+    <div class="koenig-section">
+        <div class="koenig-inner">
+            <div class="koenig-text">
+                <h2 class="koenig-title">Velvet Oasis</h2>
+                <p class="koenig-desc">Bienvenidos a nuestro emprendimiento, desde nuestra fundación en 2026 en el Politécnico Milagro Celeste Arias, nos hemos comprometido
+                    a ofrecer productos de higiene y cuidado personal de la más alta calidad, acompañados de una atención cercana y confiable. Nuestro objetivo principal es
+                    brindar a cada cliente una experiencia sensorial única, transparente y saludable, adaptándonos a las necesidades específicas de su piel y a su presupuesto.
+                </p>
+                <p>
+                Buscamos facilitar el acceso a productos que se ajusten tanto a sus expectativas de bienestar como a su estilo de vida, siempre garantizando seguridad, pureza y delicadeza.
+                Nos visualizamos como una marca líder en el sector de la cosmética artesanal y el cuidado personal, innovando continuamente en nuestras fórmulas y manteniendo un firme compromiso
+                con nuestros clientes y nuestra comunidad educativa.
+                </p>
+                <p>Contamos con un amplio catálogo que incluye jabones artesanales y terapéuticos de diversas categorías, especializándonos en jabones aromáticos y medicinales. Trabajamos directamente
+                    con ingredientes naturales y esencias de primera calidad que avalan la efectividad y suavidad de nuestros productos. Cada barra de jabón es cuidadosamente elaborada e inspeccionada
+                    para asegurar su óptimo estado y beneficio antes de llegar a sus manos.</p>
+            </div>
+            <div class="koenig-image">
+                <img src="images/tropical.webp" alt="Auto de lujo en CleanerStudio" />
+            </div>
+        </div>
+    </div>
+
+    <!-- Gallery grid removed as requested -->
+
+    <!-- CTA Section: Call-to-action to browse all cars -->
+
+<!-- featured and gallery moved into the #home section above -->
+
+    <!-- Vertical Sections with Images and Text -->
+    <div class="vertical-sections-container">
+        <div class="vertical-card">
+            <div class="vertical-image">
+                <img src="images/Tropical1.webp" alt="Producto 1" />
+            </div>
+            <div class="vertical-text">
+                <h3>Mision</h3>
+                <p>En Velvet Oasis, nuestra misión es brindar un refugio natural para el cuidado facial y personal, donde la piel encuentre equilibrio,
+                    suavidad y renovación. Creamos jabones artesanales, gloss, rubores, cremas faciales y exfoliantes elaborados con ingredientes naturales
+                    y libres de químicos agresivos, inspirados en la pureza y tranquilidad de un oasis. Buscamos acompañar a nuestros clientes en el cuidado
+                    consciente de su piel, promoviendo bienestar, belleza auténtica y conexión con la naturaleza en cada producto.</p>
+            </div>
+        </div>
+
+        <div class="vertical-card">
+            <div class="vertical-image">
+                <img src="images/tropical3.webp" alt="Producto 2" />
+            </div>
+            <div class="vertical-text">
+                <h3>Vision</h3>
+                <p>Ser una marca referente en el cuidado facial y personal natural, reconocida por transformar la rutina diaria de nuestros clientes en una
+                    experiencia de bienestar. En Velvet Oasis aspiramos a que cada jabón artesanal, gloss, rubor,
+                    crema facial sea un refugio para la piel, nutrirla con fórmulas naturales y libres de químicos.
+                    Buscamos crecer como una marca consciente, sostenible y confiable, donde la suavidad, la pureza y el equilibrio de la naturaleza se reflejen en cada producto.</p>
+            </div>
+        </div>
+
+        <div class="vertical-card">
+            <div class="vertical-image">
+                <img src="images/tropical2.jpg" alt="Producto 3" />
+            </div>
+            <div class="vertical-text">
+                <h3>Valores</h3>
+                <p>Nos regimos por la honestidad y la pasión por lo natural, garantizando transparencia absoluta en cada ingrediente que toca tu piel. Valoramos la sostenibilidad
+                    como un compromiso inquebrantable, creando cosmética consciente que respeta y protege el planeta. En Velvet Oasis, la excelencia artesanal y la integridad son
+                    nuestra brújula, asegurando que la belleza sea siempre saludable, ética y libre de crueldad, priorizando tu bienestar y la armonía con la naturaleza en todo momento.</p>
+            </div>
+        </div>
+    </div>
+
+<script>
+// Variables globales del carrito
+let cart = [];
+
+// Función para agregar al carrito
+function addToCart(id, name, price) {
+    const existingItem = cart.find(item => item.id === id);
+    
+    if (existingItem) {
+        existingItem.quantity += 1;
+    } else {
+        cart.push({ id, name, price, quantity: 1 });
+    }
+    
+    updateCart();
+    showCartNotification();
+}
+
+// Función para actualizar la cantidad
+function updateQuantity(id, change) {
+    const item = cart.find(item => item.id === id);
+    if (item) {
+        item.quantity += change;
+        if (item.quantity <= 0) {
+            cart = cart.filter(item => item.id !== id);
+        }
+        updateCart();
+    }
+}
+
+// Función para eliminar del carrito
+function removeFromCart(id) {
+    cart = cart.filter(item => item.id !== id);
+    updateCart();
+}
+
+// Función para vaciar el carrito
+function clearCart() {
+    cart = [];
+    updateCart();
+}
+
+// Función para actualizar la visualización del carrito
+function updateCart() {
+    const cartItems = document.getElementById('cartItems');
+    const cartSummary = document.getElementById('cartSummary');
+    const cartTotal = document.getElementById('cartTotal');
+    
+    if (cart.length === 0) {
+        cartItems.innerHTML = '<p style="color:#fff;text-align:center;">Tu carrito está vacío.</p>';
+        cartSummary.style.display = 'none';
+    } else {
+        cartSummary.style.display = 'block';
+        
+        let html = '';
+        let total = 0;
+        
+        cart.forEach(item => {
+            const subtotal = item.price * item.quantity;
+            total += subtotal;
+            
+            html += `
+                <div class="cart-item">
+                    <div class="cart-item-info">
+                        <p class="cart-item-name">${item.name}</p>
+                        <p class="cart-item-price">$${item.price} c/u</p>
+                    </div>
+                    <div class="cart-item-controls">
+                        <button class="cart-qty-btn" onclick="updateQuantity(${item.id}, -1)">-</button>
+                        <span class="cart-qty">${item.quantity}</span>
+                        <button class="cart-qty-btn" onclick="updateQuantity(${item.id}, 1)">+</button>
+                        <button class="cart-remove-btn" onclick="removeFromCart(${item.id})">Eliminar</button>
+                    </div>
+                </div>
+            `;
+        });
+        
+        cartItems.innerHTML = html;
+        cartTotal.textContent = '$' + total;
+    }
+    
+    // Guardar carrito en localStorage
+    localStorage.setItem('cart', JSON.stringify(cart));
+}
+
+// Función para mostrar notificación
+function showCartNotification() {
+    // Aquí podrías agregar una notificación visual
+    console.log('Producto agregado al carrito');
+}
+
+// Función para proceder al pago
+function checkout() {
+    if (cart.length === 0) {
+        alert('Tu carrito está vacío');
+        return;
+    }
+    
+    const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    alert('Ir a pagar: Total $' + total + '\\n\\nEsta es una demostración. En una aplicación real, te redireccionaría a un portal de pagos.');
+}
+
+// Cargar carrito al iniciar la página
+window.addEventListener('DOMContentLoaded', function() {
+    const savedCart = localStorage.getItem('cart');
+    if (savedCart) {
+        cart = JSON.parse(savedCart);
+        updateCart();
+    }
+});
+
+// Función para mostrar/ocultar jabones destacados solo en inicio
+function updateFeaturedSoaps() {
+    const hash = window.location.hash;
+    const featured = document.getElementById('featured-soaps');
+    const gloss = document.getElementById('featured-gloss');
+    if (hash === '' || hash === '#home') {
+        featured.style.display = 'block';
+        gloss.style.display = 'block';
+    } else {
+        featured.style.display = 'none';
+        gloss.style.display = 'none';
+    }
+}
+
+window.addEventListener('hashchange', updateFeaturedSoaps);
+window.addEventListener('load', updateFeaturedSoaps);
+
+try {
+(function () {
+    const cards = Array.from(document.querySelectorAll('#cars .car-card'));
+    const brandButtons = Array.from(document.querySelectorAll('.brand-link'));
+    const navToggle = document.querySelector('.nav-toggle');
+    const autosMenu = document.getElementById('autos-menu');
+
+    function filterByBrand(brand) {
+        const b = (brand || 'all').toLowerCase();
+        cards.forEach(card => {
+            const brandName = (card.dataset.brand || '').toLowerCase();
+            if (b === 'all' || brandName === b) {
+                card.style.display = '';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    }
+
+    
+    brandButtons.forEach(btn => {
+        btn.addEventListener('click', function (e) {
+            const brand = this.dataset.brand || 'all';
+            
+            filterByBrand(brand);
+            
+            location.hash = '#cars';
+            
+            if (autosMenu) {
+                autosMenu.setAttribute('aria-hidden', 'true');
+            }
+            if (navToggle) {
+                navToggle.setAttribute('aria-expanded', 'false');
+            }
+        });
+    });
+
+   
+    if (navToggle && autosMenu) {
+        navToggle.addEventListener('click', function (e) {
+            const expanded = this.getAttribute('aria-expanded') === 'true';
+            this.setAttribute('aria-expanded', String(!expanded));
+            autosMenu.setAttribute('aria-hidden', String(expanded));
+        });
+
+       
+        document.addEventListener('click', function (e) {
+            const navAutos = document.getElementById('nav-autos');
+            if (!navAutos) return;
+            if (!navAutos.contains(e.target)) {
+                navToggle.setAttribute('aria-expanded', 'false');
+                autosMenu.setAttribute('aria-hidden', 'true');
+            }
+        });
+    }
+
+
+    const modal = document.createElement('div');
+    modal.id = 'car-modal';
+    modal.className = 'modal';
+    modal.setAttribute('aria-hidden', 'true');
+    modal.innerHTML = `
+        <div class="modal-content" role="dialog" aria-modal="true">
+            <button class="modal-close" aria-label="Cerrar">&times;</button>
+            <img class="modal-image" src="" alt="" />
+            <div class="modal-info">
+                <h3 class="modal-title"></h3>
+                <p class="modal-price"></p>
+                <p class="modal-desc"></p>
+            </div>
+        </div>`;
+    document.body.appendChild(modal);
+
+
+    (function () {
+        // ...existing code for car modals and cards...
+    })();
+
+    function hideUserProfile() {
+        if (loginBtnNav) loginBtnNav.style.display = 'flex';
+        const userProfile = document.getElementById('userProfile');
+        if (userProfile) userProfile.style.display = 'none';
+        const userEmail = document.getElementById('userEmail');
+        if (userEmail) userEmail.textContent = '';
+        // Remove admin-open when hiding profile
+        document.body.classList.remove('admin-open');
+    }
+    // Tab switching functionality
+    const tabButtons = document.querySelectorAll('.login-tab-btn');
+    const tabContents = document.querySelectorAll('.login-tab-content');
+    const loginMessage = document.getElementById('loginMessage');
+    const registerMessage = document.getElementById('registerMessage');
+
+    if (tabButtons.length > 0) {
+        tabButtons.forEach(btn => {
+            btn.addEventListener('click', function () {
+                const tabName = this.getAttribute('data-tab');
+                
+                // Remove active from all buttons and contents
+                tabButtons.forEach(b => b.classList.remove('active'));
+                tabContents.forEach(c => c.classList.remove('active'));
+                
+                // Add active to clicked button and corresponding content
+                this.classList.add('active');
+                const tabContent = document.querySelector(`.login-tab-content[data-tab="${tabName}"]`);
+                if (tabContent) tabContent.classList.add('active');
+                
+                // Clear messages when switching tabs
+                if (loginMessage) {
+                    loginMessage.textContent = '';
+                    loginMessage.className = 'login-message';
+                }
+                if (registerMessage) {
+                    registerMessage.textContent = '';
+                    registerMessage.className = 'login-message';
+                }
+            });
+        });
+    }
+
+    // Login modal references
+    const loginBtnNav = document.getElementById('loginBtnNav');
+    const loginModal = document.getElementById('loginModal');
+    const loginModalClose = document.getElementById('loginModalClose');
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    const logoutBtn = document.getElementById('logoutBtn');
+
+    // Open login modal
+    if (loginBtnNav && loginModal) {
+        loginBtnNav.addEventListener('click', function (e) {
+            e.preventDefault();
+            // Ensure modal is visible and on top of any stacking contexts
+            loginModal.setAttribute('aria-hidden', 'false');
+            loginModal.style.display = 'flex';
+            loginModal.style.position = 'fixed';
+            loginModal.style.zIndex = '2147483647';
+            const content = loginModal.querySelector('.login-modal-content');
+            if (content) {
+                content.style.zIndex = '2147483648';
+            }
+            // Add body class to disable interactions under the modal (video/hero)
+            document.body.classList.add('modal-open');
+            // Move modal to end of body to avoid stacking contexts and ensure it's top-most
+            try {
+                document.body.appendChild(loginModal);
+            } catch (err) {
+                // ignore
+            }
+
+            // Focus the appropriate input for accessibility (login or register)
+            setTimeout(function () {
+                const activeTabBtn = document.querySelector('.login-tab-btn.active');
+                let toFocus = null;
+                if (activeTabBtn && activeTabBtn.getAttribute('data-tab') === 'register') {
+                    toFocus = document.getElementById('registerName');
+                } else {
+                    toFocus = document.getElementById('loginEmail');
+                }
+                if (toFocus) {
+                    try { toFocus.focus({ preventScroll: false }); } catch (e) { toFocus.focus(); }
+                    if (typeof toFocus.select === 'function') toFocus.select();
+                }
+            }, 80);
+        });
+    }
+
+    // Observe modal aria-hidden changes to clean up body class and inline styles
+    if (loginModal) {
+        const modalAttrObserver = new MutationObserver(function (mutationsList) {
+            for (const mut of mutationsList) {
+                if (mut.type === 'attributes' && mut.attributeName === 'aria-hidden') {
+                    const isHidden = loginModal.getAttribute('aria-hidden') === 'true';
+                    if (isHidden) {
+                        document.body.classList.remove('modal-open');
+                        // clear inline styles we might have set
+                        loginModal.style.display = '';
+                        loginModal.style.position = '';
+                        loginModal.style.zIndex = '';
+                        const content = loginModal.querySelector('.login-modal-content');
+                        if (content) {
+                            content.style.zIndex = '';
+                        }
+                    }
+                }
+            }
+        });
+        modalAttrObserver.observe(loginModal, { attributes: true });
+    }
+
+    // Simple focus trap for modal: keep Tab inside modal when open
+    if (loginModal) {
+        (function setupFocusTrap() {
+            function isVisible(el) {
+                return el && el.offsetWidth > 0 && el.offsetHeight > 0;
+            }
+
+            loginModal.addEventListener('keydown', function (e) {
+                if (loginModal.getAttribute('aria-hidden') === 'true') return;
+                if (e.key !== 'Tab') return;
+                const focusable = Array.from(loginModal.querySelectorAll('a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])'))
+                    .filter(isVisible);
+                if (!focusable.length) return;
+                const first = focusable[0];
+                const last = focusable[focusable.length - 1];
+                if (!e.shiftKey && document.activeElement === last) {
+                    e.preventDefault();
+                    first.focus();
+                } else if (e.shiftKey && document.activeElement === first) {
+                    e.preventDefault();
+                    last.focus();
+                }
+            });
+        })();
+    }
+
+    // Close login modal
+    if (loginModalClose && loginModal) {
+        loginModalClose.addEventListener('click', function () {
+            loginModal.setAttribute('aria-hidden', 'true');
+            if (loginMessage) {
+                loginMessage.textContent = '';
+                loginMessage.className = 'login-message';
+            }
+            if (registerMessage) {
+                registerMessage.textContent = '';
+                registerMessage.className = 'login-message';
+            }
+            if (loginForm) loginForm.reset();
+            if (registerForm) registerForm.reset();
+        });
+    }
+
+    // Close modal when clicking outside
+    if (loginModal) {
+        loginModal.addEventListener('click', function (e) {
+            if (e.target === loginModal) {
+                loginModal.setAttribute('aria-hidden', 'true');
+                if (loginMessage) {
+                    loginMessage.textContent = '';
+                    loginMessage.className = 'login-message';
+                }
+                if (registerMessage) {
+                    registerMessage.textContent = '';
+                    registerMessage.className = 'login-message';
+                }
+                if (loginForm) loginForm.reset();
+                if (registerForm) registerForm.reset();
+            }
+        });
+    }
+
+    // Handle logout
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', function () {
+            localStorage.removeItem('currentUserEmail');
+            localStorage.removeItem('currentUserName');
+            localStorage.removeItem('currentUserRole');
+            
+            // Reset currentRole
+            currentRole = 'usuario';
+            
+            // Remove editable classes from hero content
+            if (heroH1) {
+                heroH1.classList.remove('editable', 'editing');
+            }
+            if (heroP) {
+                heroP.classList.remove('editable', 'editing');
+            }
+            
+            hideUserProfile();
+            const adminPanel = document.getElementById('adminPanel');
+            if (adminPanel) {
+                adminPanel.classList.remove('show', 'expanded');
+            }
+            if (loginMessage) {
+                loginMessage.textContent = '';
+                loginMessage.className = 'login-message';
+            }
+            if (registerMessage) {
+                registerMessage.textContent = '';
+                registerMessage.className = 'login-message';
+            }
+            if (loginForm) loginForm.reset();
+            if (registerForm) registerForm.reset();
+        });
+    }
+
+    // Handle login form submission
+    if (loginForm) {
+        loginForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const loginEmail = document.getElementById('loginEmail');
+            const loginPassword = document.getElementById('loginPassword');
+            const email = loginEmail ? loginEmail.value.trim() : '';
+            const password = loginPassword ? loginPassword.value.trim() : '';
+
+            // Basic validation
+            if (!email || !password) {
+                if (loginMessage) {
+                    loginMessage.textContent = 'Por favor, completa todos los campos.';
+                    loginMessage.className = 'login-message error';
+                }
+                return;
+            }
+
+            // Email format validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                if (loginMessage) {
+                    loginMessage.textContent = 'Por favor, ingresa un correo válido.';
+                    loginMessage.className = 'login-message error';
+                }
+                return;
+            }
+
+            // Password length validation
+            if (password.length < 6) {
+                if (loginMessage) {
+                    loginMessage.textContent = 'La contraseña debe tener al menos 6 caracteres.';
+                    loginMessage.className = 'login-message error';
+                }
+                return;
+            }
+
+            // Simulate successful login
+            if (loginMessage) {
+                loginMessage.textContent = '¡Sesión iniciada correctamente!';
+                loginMessage.className = 'login-message success';
+            }
+
+            // Save user to localStorage (using email as identifier, but we'll ask for name on first login)
+            localStorage.setItem('currentUserEmail', email);
+            const displayName = email.split('@')[0]; // Use part before @ as display name
+            localStorage.setItem('currentUserName', displayName);
+
+            // Optional: Close modal after 2 seconds
+            setTimeout(function () {
+                loginModal.setAttribute('aria-hidden', 'true');
+                showUserProfile(displayName);
+                loginForm.reset();
+                loginMessage.textContent = '';
+                loginMessage.className = 'login-message';
+            }, 2000);
+            // Show dashboard
+            setTimeout(function () {
+                const dashboard = document.getElementById('dashboard');
+                const dashboardUserName = document.getElementById('dashboardUserName');
+                dashboardUserName.textContent = displayName;
+                dashboard.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }, 2000);
+        });
+    }
+
+    // Handle register form submission
+    if (registerForm) {
+        registerForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const name = registerName.value.trim();
+            const email = registerEmail.value.trim();
+            const password = registerPassword.value.trim();
+            const confirm = registerConfirm.value.trim();
+
+            // Basic validation
+            if (!name || !email || !password || !confirm) {
+                registerMessage.textContent = 'Por favor, completa todos los campos.';
+                registerMessage.className = 'login-message error';
+                return;
+            }
+
+            // Email format validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                registerMessage.textContent = 'Por favor, ingresa un correo válido.';
+                registerMessage.className = 'login-message error';
+                return;
+            }
+
+            // Password length validation
+            if (password.length < 6) {
+                registerMessage.textContent = 'La contraseña debe tener al menos 6 caracteres.';
+                registerMessage.className = 'login-message error';
+                return;
+            }
+
+            // Password match validation
+            if (password !== confirm) {
+                registerMessage.textContent = 'Las contraseñas no coinciden.';
+                registerMessage.className = 'login-message error';
+                return;
+            }
+
+            // Simulate successful registration
+            if (registerMessage) {
+                registerMessage.textContent = '¡Cuenta creada exitosamente! Iniciando sesión...';
+                registerMessage.className = 'login-message success';
+            }
+
+            // Get selected role
+            const roleRadio = document.querySelector('input[name="role"]:checked');
+            const selectedRole = roleRadio ? roleRadio.value : 'usuario';
+
+            // Save user to localStorage including role
+            localStorage.setItem('currentUserEmail', email);
+            localStorage.setItem('currentUserName', name);
+            localStorage.setItem('currentUserRole', selectedRole);
+
+            // Optional: Close modal after 2 seconds
+            setTimeout(function () {
+                if (loginModal) loginModal.setAttribute('aria-hidden', 'true');
+                showUserProfile(name);
+                if (registerForm) registerForm.reset();
+                if (registerMessage) {
+                    registerMessage.textContent = '';
+                    registerMessage.className = 'login-message';
+                }
+                // Switch back to login tab
+                const loginTabBtn = document.getElementById('loginTabBtn');
+                if (loginTabBtn) loginTabBtn.click();
+            }, 2000);
+            // Show dashboard
+            setTimeout(function () {
+                const dashboard = document.getElementById('dashboard');
+                const dashboardUserName = document.getElementById('dashboardUserName');
+                if (dashboard && dashboardUserName) {
+                    dashboardUserName.textContent = name;
+                    dashboard.classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                }
+            }, 2000);
+        });
+    }
+
+    // Close modal with Escape key
+    document.addEventListener('keydown', function (e) {
+        if (loginModal && e.key === 'Escape' && loginModal.getAttribute('aria-hidden') === 'false') {
+            loginModal.setAttribute('aria-hidden', 'true');
+            loginMessage.textContent = '';
+            loginMessage.className = 'login-message';
+            registerMessage.textContent = '';
+            registerMessage.className = 'login-message';
+            loginForm.reset();
+            registerForm.reset();
+        }
+    });
+
+    // Check for existing session on page load
+    checkUserSession();
+
+    // Admin functionality
+    const adminPanel = document.getElementById('adminPanel');
+    const adminPanelHeader = document.getElementById('adminPanelHeader');
+    const editTitleBtn = document.getElementById('editTitleBtn');
+    const editDescBtn = document.getElementById('editDescBtn');
+    const heroH1 = document.querySelector('.hero-content h1');
+    const heroP = document.querySelector('.hero-content p');
+    let currentRole = localStorage.getItem('currentUserRole') || 'usuario';
+
+
+    // Panel admin toggle functionality
+    if (adminPanelHeader) {
+        adminPanelHeader.addEventListener('click', function () {
+            adminPanel.classList.toggle('expanded');
+        });
+    }
+
+    // Function to enable inline editing for an element
+    function makeEditable(element, storageKey) {
+        if (!element) return;
+        
+        element.classList.add('editable');
+        element.addEventListener('click', function (e) {
+            e.stopPropagation();
+            
+            // Prevent editing if not admin
+            if (currentRole !== 'administrador') return;
+            
+            // If already editing, don't start again
+            if (element.classList.contains('editing')) return;
+            
+            element.classList.add('editing');
+            const currentText = element.textContent;
+            const isHeading = element.tagName === 'H1';
+            
+            // Create input element
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.value = currentText;
+            input.className = 'editable-input';
+            input.style.fontSize = window.getComputedStyle(element).fontSize;
+            input.style.fontWeight = window.getComputedStyle(element).fontWeight;
+            
+            // Replace element content with input
+            const parent = element.parentNode;
+            parent.insertBefore(input, element);
+            element.style.display = 'none';
+            
+            // Focus input
+            input.focus();
+            input.select();
+            
+            // Function to save and exit edit mode
+            function saveEdit() {
+                const newText = input.value.trim();
+                if (newText !== '') {
+                    element.textContent = newText;
+                    localStorage.setItem(storageKey, newText);
+                }
+                element.style.display = '';
+                element.classList.remove('editing');
+                input.remove();
+            }
+            
+            // Save on Enter
+            input.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter') {
+                    saveEdit();
+                }
+                if (e.key === 'Escape') {
+                    element.style.display = '';
+                    element.classList.remove('editing');
+                    input.remove();
+                }
+            });
+            
+            // Save on blur
+            input.addEventListener('blur', saveEdit);
+        });
+    }
+
+    // Make hero content editable if admin
+    if (currentRole === 'administrador') {
+        makeEditable(heroH1, 'heroTitle');
+        makeEditable(heroP, 'heroDesc');
+    }
+
+    // Register top-level admin button handlers so they work immediately
+    (function registerAdminButtons() {
+        const editHeroTitle = document.getElementById('editHeroTitle');
+        const editHeroDesc = document.getElementById('editHeroDesc');
+        const editKoenigTitle = document.getElementById('editKoenigTitle');
+        const editKoenigDesc = document.getElementById('editKoenigDesc');
+        const editCtaTitle = document.getElementById('editCtaTitle');
+        const editCtaDesc = document.getElementById('editCtaDesc');
+        const editServicesList = document.getElementById('editServicesList');
+        const editGalleryTexts = document.getElementById('editGalleryTexts');
+        const editContactText = document.getElementById('editContactText');
+        const editCarsTitle = document.getElementById('editCarsTitle');
+
+        function editElementText(selector, storageKey) {
+            const element = document.querySelector(selector);
+            if (!element) {
+                alert('Elemento no encontrado');
+                return;
+            }
+            const newText = prompt('Editar texto:', element.textContent.trim());
+            if (newText !== null && newText.trim() !== '') {
+                element.textContent = newText;
+                localStorage.setItem(storageKey, newText);
+                alert('Texto actualizado y guardado');
+            }
+        }
+
+        if (editHeroTitle) {
+            editHeroTitle.addEventListener('click', function () { editElementText('.hero-content h1', 'heroTitle'); });
+        }
+        if (editHeroDesc) {
+            editHeroDesc.addEventListener('click', function () { editElementText('.hero-content p', 'heroDesc'); });
+        }
+        if (editKoenigTitle) {
+            editKoenigTitle.addEventListener('click', function () { editElementText('.koenig-title', 'koenigTitle'); });
+        }
+        if (editKoenigDesc) {
+            editKoenigDesc.addEventListener('click', function () { editElementText('.koenig-desc', 'koenigDesc'); });
+        }
+        if (editCtaTitle) {
+            editCtaTitle.addEventListener('click', function () { editElementText('.cta-content h2', 'ctaTitle'); });
+        }
+        if (editCtaDesc) {
+            editCtaDesc.addEventListener('click', function () { editElementText('.cta-content p', 'ctaDesc'); });
+        }
+        if (editServicesList) {
+            editServicesList.addEventListener('click', function () {
+                const items = document.querySelectorAll('.services-list li');
+                if (items.length > 0) {
+                    const index = prompt('Editar servicio (número 1-' + items.length + '):', '1');
+                    const idx = parseInt(index) - 1;
+                    if (idx >= 0 && idx < items.length) {
+                        editElementText('.services-list li:nth-child(' + (idx + 1) + ')', 'service_' + idx);
+                    } else {
+                        alert('Número inválido');
+                    }
+                }
+            });
+        }
+        if (editGalleryTexts) {
+            editGalleryTexts.addEventListener('click', function () {
+                const texts = document.querySelectorAll('.gallery-text');
+                if (texts.length > 0) {
+                    const index = prompt('Editar texto de galería (número 1-' + texts.length + '):', '1');
+                    const idx = parseInt(index) - 1;
+                    if (idx >= 0 && idx < texts.length) {
+                        editElementText('.gallery-text:nth-child(' + (idx + 1) + ')', 'gallery_' + idx);
+                    } else {
+                        alert('Número inválido');
+                    }
+                }
+            });
+        }
+        if (editContactText) {
+            editContactText.addEventListener('click', function () {
+                const contactP = document.querySelector('#contact p');
+                if (contactP) editElementText('#contact p', 'contactText');
+            });
+        }
+        if (editCarsTitle) {
+            editCarsTitle.addEventListener('click', function () { editElementText('#cars h2', 'carsTitle'); });
+        }
+    })();
+
+    // Restore saved content from localStorage
+    function restoreAdminContent() {
+        const savedTitle = localStorage.getItem('heroTitle');
+        const savedDesc = localStorage.getItem('heroDesc');
+        const savedKoenigTitle = localStorage.getItem('koenigTitle');
+        const savedKoenigDesc = localStorage.getItem('koenigDesc');
+        const savedCtaTitle = localStorage.getItem('ctaTitle');
+        const savedCtaDesc = localStorage.getItem('ctaDesc');
+        const savedContactText = localStorage.getItem('contactText');
+        const savedCarsTitle = localStorage.getItem('carsTitle');
+        
+        if (savedTitle) {
+            const heroH1 = document.querySelector('.hero-content h1');
+            if (heroH1) heroH1.textContent = savedTitle;
+        }
+        
+        if (savedDesc) {
+            const heroP = document.querySelector('.hero-content p');
+            if (heroP) heroP.textContent = savedDesc;
+        }
+
+        if (savedKoenigTitle) {
+            const koenigTitle = document.querySelector('.koenig-title');
+            if (koenigTitle) koenigTitle.textContent = savedKoenigTitle;
+        }
+
+        if (savedKoenigDesc) {
+            const koenigDesc = document.querySelector('.koenig-desc');
+            if (koenigDesc) koenigDesc.textContent = savedKoenigDesc;
+        }
+
+        if (savedCtaTitle) {
+            const ctaTitle = document.querySelector('.cta-content h2');
+            if (ctaTitle) ctaTitle.textContent = savedCtaTitle;
+        }
+
+        if (savedCtaDesc) {
+            const ctaDesc = document.querySelector('.cta-content p');
+            if (ctaDesc) ctaDesc.textContent = savedCtaDesc;
+        }
+
+        if (savedContactText) {
+            const contactText = document.querySelector('#contact .content-section > p');
+            if (contactText) contactText.textContent = savedContactText;
+        }
+
+        if (savedCarsTitle) {
+            const carsTitle = document.querySelector('#cars h2');
+            if (carsTitle) carsTitle.textContent = savedCarsTitle;
+        }
+
+        // Restore services
+        for (let i = 0; i < 10; i++) {
+            const savedService = localStorage.getItem('service_' + i);
+            if (savedService) {
+                const serviceItem = document.querySelector('.services-list li:nth-child(' + (i + 1) + ')');
+                if (serviceItem) serviceItem.textContent = savedService;
+            }
+        }
+
+        // Restore gallery texts
+        for (let i = 0; i < 10; i++) {
+            const savedGallery = localStorage.getItem('gallery_' + i);
+            if (savedGallery) {
+                const galleryText = document.querySelector('.gallery-text:nth-child(' + (i + 1) + ')');
+                if (galleryText) galleryText.textContent = savedGallery;
+            }
+        }
+    }
+
+    // Restore content on page load
+    restoreAdminContent();
+
+    // Check for existing session on page load
+    checkUserSession();
+
+    // Dashboard functionality
+    const dashboard = document.getElementById('dashboard');
+    const dashboardHomeLink = document.getElementById('dashboardHomeLink');
+    const dashboardLogoutBtn = document.getElementById('dashboardLogoutBtn');
+
+    if (dashboardHomeLink) {
+        dashboardHomeLink.addEventListener('click', function (e) {
+            e.preventDefault();
+            dashboard.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        });
+    }
+
+    if (dashboardLogoutBtn) {
+        dashboardLogoutBtn.addEventListener('click', function () {
+            localStorage.removeItem('currentUserEmail');
+            localStorage.removeItem('currentUserName');
+            dashboard.classList.remove('active');
+            document.body.style.overflow = 'auto';
+            hideUserProfile();
+            loginMessage.textContent = '';
+            loginMessage.className = 'login-message';
+            registerMessage.textContent = '';
+            registerMessage.className = 'login-message';
+            loginForm.reset();
+            registerForm.reset();
+        });
+    }
+})();
+} catch (err) {
+    console.error('Error in IIFE:', err);
+    // El carrito todavía funciona aunque haya errores aquí
+}
+
+// ===== CARRITO - SETUP FINAL (después de todo) =====
+function setupCart() {
+    const cartBtn = document.getElementById('cartBtn');
+    const cartModal = document.getElementById('cartModal');
+    const cartModalClose = document.getElementById('cartModalClose');
+    
+    console.log('setupCart ejecutándose:', { cartBtn: !!cartBtn, cartModal: !!cartModal, cartModalClose: !!cartModalClose });
+    
+    if (!cartBtn || !cartModal) {
+        console.log('❌ Cart elements not found');
+        return;
+    }
+    
+    // Mover modal al inicio del body para evitar stacking context
+    document.body.insertBefore(cartModal, document.body.firstChild);
+    console.log('✓ Modal movido al inicio del body');
+    
+    // Abrir carrito
+    cartBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log('✓ Click en carrito detectado');
+        cartModal.setAttribute('aria-hidden', 'false');
+        cartModal.style.display = 'flex !important';
+        cartModal.style.visibility = 'visible !important';
+        cartModal.style.opacity = '1 !important';
+    });
+    
+    // Cerrar con botón X
+    if (cartModalClose) {
+        cartModalClose.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            cartModal.setAttribute('aria-hidden', 'true');
+            cartModal.style.display = 'none';
+        });
+    }
+    
+    // Cerrar haciendo click fuera
+    cartModal.addEventListener('click', function(e) {
+        if (e.target === cartModal) {
+            cartModal.setAttribute('aria-hidden', 'true');
+            cartModal.style.display = 'none';
+        }
+    });
+    
+    // Cerrar con Escape
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && cartModal.getAttribute('aria-hidden') === 'false') {
+            cartModal.setAttribute('aria-hidden', 'true');
+            cartModal.style.display = 'none';
+        }
+    });
+    
+    console.log('✓ Cart setup complete');
+}
+
+// Ejecutar al final de todo
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupCart);
+} else {
+    // Si el documento ya está listo
+    setTimeout(setupCart, 100);
+}
+</script>
+
+<!-- Carrito Modal - Global para todos los apartados -->
+<div class="modal" id="cartModal" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="modal-content" style="max-width:900px;width:90%;display:flex;flex-direction:column;">
+        <button class="modal-close" id="cartModalClose" aria-label="Cerrar">×</button>
+        <h2 style="margin-top:0;text-align:center;width:100%;">Carrito de Compras</h2>
+        <div id="cartItems" style="max-height:600px;overflow-y:auto;margin-bottom:20px;">
+            <p style="color:#fff;text-align:center;" id="emptyCart">Tu carrito está vacío.</p>
+        </div>
+        <div id="cartSummary" style="display:none;border-top:1px solid #333;padding-top:15px;">
+            <div style="display:flex;justify-content:space-between;margin-bottom:10px;">
+                <span style="color:#fff;">Total:</span>
+                <span style="color:#002855;font-weight:bold;font-size:1.2em;" id="cartTotal">$0</span>
+            </div>
+            <button style="width:100%;background: #002855;color:#fff;border:none;padding:12px;border-radius:5px;font-weight:bold;cursor:pointer;margin-bottom:10px;" onclick="checkout()">Proceder al pago</button>
+            <button style="width:100%;background:transparent;color:#002855;border:1px solid #002855;padding:12px;border-radius:5px;font-weight:bold;cursor:pointer;" onclick="clearCart()">Vaciar carrito</button>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

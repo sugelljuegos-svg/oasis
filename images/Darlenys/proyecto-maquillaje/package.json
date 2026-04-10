@@ -1,0 +1,12 @@
+{
+  "name": "proyecto-maquillaje",
+  "version": "1.0.0",
+  "description": "Proyecto web para maquillaje",
+  "main": "index.html",
+  "scripts": {
+    "start": "open index.html"
+  },
+  "keywords": ["maquillaje", "web"],
+  "author": "",
+  "license": "ISC"
+}
